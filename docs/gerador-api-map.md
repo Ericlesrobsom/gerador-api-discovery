@@ -933,7 +933,18 @@ GET /futebol/noticias-gerar.php?action=logo
 
 → `200 image/png` (11 KB no teste). Sem logo → `400` com o erro de logo.
 
-A página informa **2 trocas por dia** na conta observada.
+A página informa **2 trocas por dia**. A terceira tentativa no mesmo dia
+retornou `200` com a página HTML:
+
+```text
+Erro! Você atingiu o limite de 2 trocas de logo por dia.
+```
+
+A logo é ampliada na arte. Um ponto de **300 px** em um canvas 1024×1024 foi
+aceito, mas apareceu como um **círculo branco grande**, cobrindo parte do
+banner. Um ponto de **100 px** foi preparado, mas o upload foi recusado pelo
+limite diário (não pelo conteúdo). O limite também está em
+[`openapi.yaml`](../../openapi.yaml) (`x-observed-limits`).
 
 > ⚠️ **Regra crítica:** a própria página avisa que o Gerador Pro é para uso
 > exclusivo com a marca do cliente e que tentativas de tornar o banner

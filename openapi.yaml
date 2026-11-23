@@ -10,6 +10,18 @@ info:
     lidos no JavaScript, sem resposta real capturada.
   x-unofficial: true
   x-observed-at: "2026-11-22"
+x-observed-limits:
+  logo_changes_per_day: 2
+  logo_limit_error: "Você atingiu o limite de 2 trocas de logo por dia."
+  news_batch_max: 10
+  movies_batch_max: 10
+  cortes_per_day: 5
+  indicacoes_per_day: 3
+  notes: |
+    Limites observados na conta de teste em 2026-11-22. A terceira troca de
+    logo no mesmo dia retorna a página HTML de erro com a mensagem acima.
+    O painel amplia a logo na arte; um ponto de 300 px em um canvas 1024x1024
+    apareceu como um círculo branco grande.
 servers:
   - url: https://gerador.pro
     description: Painel de produção
@@ -512,6 +524,14 @@ paths:
     post:
       tags: [logo]
       summary: Envia a logo
+      description: |
+        Limite observado: 2 trocas de logo por dia. A terceira tentativa no
+        mesmo dia retorna 200 com a página HTML de erro:
+        "Erro! Você atingiu o limite de 2 trocas de logo por dia."
+        A logo é ampliada na arte; um ponto de 300 px em um canvas 1024x1024
+        apareceu como um círculo branco grande.
+      x-rate-limit: "2/day"
+      x-observed-error: "Você atingiu o limite de 2 trocas de logo por dia."
       requestBody:
         required: true
         content:
@@ -525,7 +545,9 @@ paths:
                 upload: { type: string, description: Nome do botão; obrigatório para o PHP processar }
       responses:
         "200":
-          description: Página de logo atualizada
+          description: |
+            Página de logo atualizada ou página HTML com o erro de limite
+            ("Você atingiu o limite de 2 trocas de logo por dia.").
           content:
             text/html: { schema: { type: string } }
   /config_telegram.php:

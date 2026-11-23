@@ -151,6 +151,10 @@ Mesmo fluxo, trocando:
 3. O campo `upload` é o nome do botão; **`form.submit()` não o envia**.
 4. `GET /futebol/noticias-gerar.php?action=logo` deve passar a responder
    `200 image/png`.
+5. Limite: **2 trocas de logo por dia**. A terceira retorna a página HTML
+   “Erro! Você atingiu o limite de 2 trocas de logo por dia.”
+6. A logo é ampliada na arte; um ponto de 300 px no canvas 1024×1024 apareceu
+   como um círculo branco grande.
 
 ## 13. Telegram
 
