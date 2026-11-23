@@ -71,6 +71,28 @@ Retornou `200` com a página “Sucesso!” em um teste com imagem e legenda
 “teste de mapeamento”. **Não foi possível confirmar a entrega**: depende do
 `chat_id` configurado. Se você recebeu uma mensagem de teste, foi esse teste.
 
+## Bloqueio por logo invisível (regra crítica)
+
+A página de logo avisa:
+
+> “O Gerador Pro é para uso exclusivo com a sua marca. Tentativas de tornar o
+> banner universal ou genérico resultarão na exclusão do painel.”
+
+Foi enviada uma logo 100% transparente para teste. O painel detectou como
+“imagem invisível” e respondeu:
+
+```text
+CONTA BLOQUEADA
+VIOLAÇÃO DE SEGURANÇA CRÍTICA
+O sistema detectou uma tentativa de manipulação (imagem invisível) para burlar
+as regras da plataforma.
+SUA CONTA ESTÁ EM PROCESSO DE EXCLUSÃO.
+Sessão encerrada. Conexão terminada.
+```
+
+Não tente contornar. A conta precisa falar com o suporte do painel. Este mapa
+não recomenda nem apoia logo invisível/arte genérica.
+
 ## WhatsApp: três coisas diferentes
 
 1. **Número na arte/contato do gerador**: as telas de Notícias e Filmes/Séries

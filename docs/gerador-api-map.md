@@ -924,6 +924,13 @@ GET /futebol/noticias-gerar.php?action=logo
 
 A página informa **2 trocas por dia** na conta observada.
 
+> ⚠️ **Regra crítica:** a própria página avisa que o Gerador Pro é para uso
+> exclusivo com a marca do cliente e que tentativas de tornar o banner
+> universal/genérico resultam em exclusão. Uma logo **100% transparente** foi
+> detectada como “imagem invisível” e a conta foi bloqueada com a mensagem
+> “VIOLAÇÃO DE SEGURANÇA CRÍTICA”. **Não tente** logo invisível, PNG 1×1
+> transparente ou arte genérica.
+
 ---
 
 ## 13. Telegram

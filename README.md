@@ -8,6 +8,11 @@ obtido pelo navegador em **22/11/2026**, sem acesso ao código-fonte do servidor
 > requisições e respostas reais. Rotas, campos e comportamentos podem mudar sem
 > aviso.
 
+> ⚠️ **Regra crítica do painel:** a página de logo proíbe imagens
+> genéricas/invisíveis. Um teste com logo 100% transparente foi detectado como
+> “imagem invisível” e **bloqueou a conta**. Não repita. Veja
+> [`docs/limites-e-erros.md`](docs/limites-e-erros.md).
+
 ## O que tem aqui
 
 | Arquivo | Conteúdo |
