@@ -209,7 +209,7 @@ Tempo observado: **605 ms** para 1 notícia.
 
 Usado pelo botão “Continuar geração” quando a conexão cai. Devolve o job.
 
-### `POST ?action=contact` [código]
+### `POST ?action=contact`
 
 `application/json`
 
@@ -217,7 +217,11 @@ Usado pelo botão “Continuar geração” quando a conexão cai. Devolve o job
 {"remember": true, "whatsapp": "<numero>", "csrf": "<csrf>"}
 ```
 
-Salva o WhatsApp para as próximas visitas. Não executado.
+Salva o WhatsApp para as próximas visitas. **Executado com sucesso** em
+2026-11-22: a resposta foi
+`{"remember":true,"whatsapp":"<numero>"}` e o valor passou a aparecer em
+`const SAVED_CONTACT=...` na página. Isso preenche o campo de WhatsApp das telas
+de Notícias e Filmes/Séries; não é o “perfil” usado pelo Robô Automático.
 
 ### Limpeza e galeria
 
@@ -982,6 +986,12 @@ incluir_whatsapp=1 (opcional)
 
 → `200`. Um POST sem os checkboxes (desmarcados) também retornou `200`.
 Não foi habilitado nenhum envio automático.
+
+O texto da própria página explica que `incluir_whatsapp` coloca **o número
+cadastrado no perfil** nos banners automáticos. A tela de perfil é
+`cadastrar_whatsapp.php`, que está bloqueada nesta conta (redireciona para
+`access_denied`). O contato salvo em Notícias/Filmes (`?action=contact`) é outro
+campo e não deve ser confundido com o perfil do Robô.
 
 ---
 

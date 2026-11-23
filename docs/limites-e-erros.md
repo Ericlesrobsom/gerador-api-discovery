@@ -71,6 +71,19 @@ Retornou `200` com a página “Sucesso!” em um teste com imagem e legenda
 “teste de mapeamento”. **Não foi possível confirmar a entrega**: depende do
 `chat_id` configurado. Se você recebeu uma mensagem de teste, foi esse teste.
 
+## WhatsApp: três coisas diferentes
+
+1. **Número na arte/contato do gerador**: as telas de Notícias e Filmes/Séries
+   têm um campo de WhatsApp e um `?action=contact` que salva
+   `{remember:true, whatsapp}`. Isso foi configurado e passa a vir preenchido
+   nessas telas.
+2. **Número no perfil do Robô Automático**: o checkbox `incluir_whatsapp` usa o
+   número cadastrado no perfil. A tela de perfil é `cadastrar_whatsapp.php`,
+   bloqueada nesta conta.
+3. **Bot que envia para o WhatsApp**: não há endpoint acessível nesta conta
+   para conectar um bot de WhatsApp. O que está configurado e funcionando é o
+   envio por Telegram (`chat_id` presente).
+
 ## O que ficou pendente
 
 | Item | Motivo |

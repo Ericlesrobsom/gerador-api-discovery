@@ -51,6 +51,8 @@ obtido pelo navegador em **22/11/2026**, sem acesso ao código-fonte do servidor
 - Ciclo Xtream completo: salvar (2,18 MB), ler, atualizar e remover.
 - Upload de logo de teste, POST de Telegram vazio e POST do Robô com tudo
   desmarcado.
+- Contato de WhatsApp salvo nas telas de Notícias e Filmes/Séries
+  (`remember:true`), com o número retornando no `SAVED_CONTACT`.
 - Limpeza da galeria de teste ao final (10 imagens removidas).
 
 ## O que não foi executado
