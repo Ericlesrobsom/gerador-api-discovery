@@ -111,6 +111,19 @@ continua: use uma logo visível da marca, nunca uma imagem invisível/genérica.
    para conectar um bot de WhatsApp. O que está configurado e funcionando é o
    envio por Telegram (`chat_id` presente).
 
+## Envio ao Telegram (validado)
+
+- 6 cores do modelo 26 (amarelo, azul, cinza, roxo, verde, vermelho) foram
+  geradas e enviadas ao Telegram em 2026-11-22.
+- URL usada pelo botão “Enviar” da galeria:
+  `GET /send_telegram.php?image=user_<user_id>%2Fbanner_1.png`.
+- Os 6 envios responderam `200` com “A imagem foi enviada para o Telegram com
+  sucesso.”
+- O arquivo `banner_1.png` é sobrescrito pela próxima geração; envie antes de
+  gerar a próxima cor.
+- A galeria ficou com o conjunto vermelho (última cor). Detalhes em
+  [`teste-telegram.md`](teste-telegram.md).
+
 ## O que ficou pendente
 
 | Item | Motivo |

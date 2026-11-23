@@ -22,6 +22,7 @@ obtido pelo navegador em **22/11/2026**, sem acesso ao código-fonte do servidor
 | [`docs/fluxos.md`](docs/fluxos.md) | passo a passo dos fluxos (login, banners, vídeos, Xtream) |
 | [`docs/seguranca.md`](docs/seguranca.md) | sessão, CSRF, redação e limites de uso |
 | [`docs/limites-e-erros.md`](docs/limites-e-erros.md) | limites, erros observados e o que ficou pendente |
+| [`docs/teste-telegram.md`](docs/teste-telegram.md) | teste real das 6 cores e envio ao Telegram |
 | [`openapi.yaml`](openapi.yaml) | especificação **não oficial** dos endpoints mapeados |
 | [`skill/SKILL.md`](skill/SKILL.md) | método reutilizável de descoberta pelo navegador |
 | [`examples/curl.md`](examples/curl.md) | exemplos com placeholders |
@@ -59,7 +60,11 @@ obtido pelo navegador em **22/11/2026**, sem acesso ao código-fonte do servidor
   desmarcado.
 - Contato de WhatsApp salvo nas telas de Notícias e Filmes/Séries
   (`remember:true`), com o número retornando no `SAVED_CONTACT`.
-- Limpeza da galeria de teste ao final (10 imagens removidas).
+- 6 banners de jogos do dia (modelo 26: amarelo, azul, cinza, roxo, verde e
+  vermelho) gerados e enviados ao Telegram; os 6 envios responderam
+  “A imagem foi enviada para o Telegram com sucesso”.
+- A galeria do primeiro teste foi limpa (10 imagens); o teste das 6 cores
+  deixou o conjunto vermelho (última cor gerada).
 
 ## O que não foi executado
 

@@ -157,8 +157,13 @@ Mesmo fluxo, trocando:
 1. `GET /config_telegram.php` → form com `chat_id`.
 2. `POST /config_telegram.php` com `chat_id` → `200`.
 3. Imagens usam `GET /send_telegram.php?image=<caminho>&caption=<texto>`.
-4. Vídeos usam um link `data-link` renderizado na página de entrega e
+4. Na galeria, o botão “Enviar” usa
+   `GET /send_telegram.php?image=user_<user_id>%2Fbanner_1.png` (sem legenda).
+   Para o dia seguinte, acrescenta `&day=tomorrow`.
+5. Vídeos usam um link `data-link` renderizado na página de entrega e
    `&custom_caption=<texto>`; sem `chat_id` o botão não é renderizado.
+6. O arquivo `banner_1.png` é sobrescrito pela próxima geração; envie antes de
+   gerar a próxima cor.
 
 ## 14. Robô Automático
 

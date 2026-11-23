@@ -481,9 +481,20 @@ GET /1banners-filmes-series.php?mode=indicacoes&type=tv
 GET /send_telegram.php?image=<caminho>&caption=<texto>
 ```
 
-→ `200 text/html` com página “Sucesso!”. A entrega real depende do `chat_id`
-configurado. Testado com uma imagem gerada; **não** foi possível confirmar se a
-mensagem chegou.
+→ `200 text/html` com página “Sucesso!”. A entrega depende do `chat_id`
+configurado.
+
+Na galeria de banners, o botão “Enviar” usa:
+
+```http
+GET /send_telegram.php?image=user_<user_id>%2Fbanner_1.png
+```
+
+Para o dia seguinte, o JS acrescenta `&day=tomorrow`.
+
+**Executado com sucesso** em 2026-11-22 nas 6 cores do modelo 26: os 6 envios
+responderam `200` com “A imagem foi enviada para o Telegram com sucesso.”
+Detalhes em [`teste-telegram.md`](teste-telegram.md).
 
 ---
 
