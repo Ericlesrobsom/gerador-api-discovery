@@ -74,4 +74,5 @@ autorização. Não há senhas, cookies, tokens, CSRF ou dados de clientes aqui.
 ## Licença
 
 MIT para o conteúdo próprio deste repositório. Marcas e conteúdo de terceiros
-pertencem aos respectivos donos. Veja [`LICENSE`](LICENSE).
+pertencem aos respectivos donos. Veja [`LICENSE`](LICENSE) e
+[`NOTICE.md`](NOTICE.md).
