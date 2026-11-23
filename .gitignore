@@ -1,0 +1,24 @@
+# Capturas e fontes locais (contêm sessão, CSRF e dados da conta)
+capturas/
+fonte/
+*.html
+
+# Segredos
+.env
+.env.*
+!.env.example
+cookies.txt
+*.cookie
+*.jar
+headers.txt
+*.token
+
+# Build e dependências
+target/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# Logs
+*.log

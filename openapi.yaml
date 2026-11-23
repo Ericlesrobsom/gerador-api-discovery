@@ -1,0 +1,819 @@
+openapi: 3.0.3
+info:
+  title: Gerador PRO — API interna (não oficial)
+  version: 0.1.0
+  description: |
+    Mapa observado da API interna do painel Gerador PRO em 2026-11-22.
+    Não é uma API oficial, não há contrato publicado e o painel pode mudar
+    sem aviso. Autenticação por cookie de sessão `PHPSESSID`; vários endpoints
+    exigem CSRF por página. Campos marcados como `x-observed: code` foram
+    lidos no JavaScript, sem resposta real capturada.
+  x-unofficial: true
+  x-observed-at: "2026-11-22"
+servers:
+  - url: https://gerador.pro
+    description: Painel de produção
+tags:
+  - name: auth
+  - name: noticias
+  - name: filmes-series
+  - name: esportes
+  - name: xtream
+  - name: banners-tmdb
+  - name: cortes
+  - name: videos
+  - name: narracao
+  - name: logo
+  - name: telegram
+  - name: robo
+  - name: util
+security:
+  - cookieAuth: []
+paths:
+  /login.php:
+    post:
+      tags: [auth]
+      summary: Login por formulário
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username: { type: string }
+                password: { type: string, format: password }
+      responses:
+        "302":
+          description: Redireciona para index.php e define PHPSESSID
+          headers:
+            Set-Cookie:
+              schema: { type: string }
+            Location:
+              schema: { type: string, example: index.php }
+        "200":
+          description: Página de login com erro
+  /logout.php:
+    get:
+      tags: [auth]
+      summary: Encerra a sessão
+      responses:
+        "302": { description: Redireciona para o login }
+  /index.php:
+    get:
+      tags: [auth]
+      summary: Dashboard (HTML server-rendered)
+      responses:
+        "200":
+          description: HTML do dashboard
+          content:
+            text/html: { schema: { type: string } }
+  /futebol/noticias-gerar.php:
+    get:
+      tags: [noticias]
+      summary: Feed, logo, miniatura ou status do job
+      parameters:
+        - $ref: "#/components/parameters/Action"
+        - name: id
+          in: query
+          schema: { type: string }
+        - name: job
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Feed JSON, imagem ou job
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Feed"
+                  - $ref: "#/components/schemas/Job"
+            image/png: { schema: { type: string, format: binary } }
+        "400":
+          description: Logo ausente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    post:
+      tags: [noticias]
+      summary: Cria/processa um lote de notícias
+      parameters:
+        - $ref: "#/components/parameters/Action"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/CreateBatch"
+                - $ref: "#/components/schemas/StepBatch"
+                - $ref: "#/components/schemas/Contact"
+      responses:
+        "200":
+          description: Job criado/atualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Job" }
+  /futebol/filmes-series-gerar.php:
+    get:
+      tags: [filmes-series]
+      summary: Feed, logo, miniatura ou status de filmes/séries
+      parameters:
+        - $ref: "#/components/parameters/Action"
+        - name: id
+          in: query
+          schema: { type: string }
+        - name: job
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Feed JSON, imagem ou job
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Feed"
+                  - $ref: "#/components/schemas/Job"
+            image/png: { schema: { type: string, format: binary } }
+        "400":
+          description: Logo ausente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    post:
+      tags: [filmes-series]
+      summary: Cria/processa um lote de filmes/séries
+      parameters:
+        - $ref: "#/components/parameters/Action"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/CreateBatch"
+                - $ref: "#/components/schemas/StepBatch"
+                - $ref: "#/components/schemas/Contact"
+      responses:
+        "200":
+          description: Job criado/atualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Job" }
+  /futebol/cartazes/clean_images.php:
+    get:
+      tags: [util]
+      summary: Apaga as imagens anteriores da conta (destrutivo)
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Limpeza concluída
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: success }
+                  message: { type: string }
+                  deleted_count: { type: integer }
+  /lote.php:
+    get:
+      tags: [esportes]
+      summary: Catálogo de modelos ou página do lote
+      parameters:
+        - name: acao
+          in: query
+          schema: { type: string, enum: [catalogo_modelos] }
+      responses:
+        "200":
+          description: Catálogo JSON ou HTML
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  modelos:
+                    type: array
+                    items: { $ref: "#/components/schemas/Modelo" }
+            text/html: { schema: { type: string } }
+  /save_favs.php:
+    post:
+      tags: [esportes]
+      summary: Salva favoritos do lote (sobrescreve)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                user_id: { type: string }
+                favoritos:
+                  type: string
+                  description: JSON serializado de [{id,script}]
+      responses:
+        "200": { description: OK }
+  /painel.php:
+    get:
+      tags: [xtream]
+      summary: Filmes em alta ou lista Xtream salva
+      parameters:
+        - name: gp_trending
+          in: query
+          schema: { type: integer, enum: [1] }
+        - name: xt_recent
+          in: query
+          schema: { type: integer, enum: [1] }
+      responses:
+        "200":
+          description: JSON
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Trending"
+                  - $ref: "#/components/schemas/XtreamMovies"
+    post:
+      tags: [xtream]
+      summary: Ações da lista Xtream de filmes
+      parameters:
+        - name: xt_recent
+          in: query
+          required: true
+          schema: { type: integer, enum: [1] }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: "#/components/schemas/XtreamAction" }
+      responses:
+        "200":
+          description: Lista salva/removida
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/XtreamMovies" }
+        "404":
+          description: Resolve sem correspondência (HTML)
+        "422":
+          description: Resolve ambíguo
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /series_banner.php:
+    get:
+      tags: [xtream]
+      summary: Séries em alta ou lista Xtream salva
+      parameters:
+        - name: gp_trending
+          in: query
+          schema: { type: integer, enum: [1] }
+        - name: xt_recent
+          in: query
+          schema: { type: integer, enum: [1] }
+      responses:
+        "200":
+          description: JSON
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Trending"
+                  - $ref: "#/components/schemas/XtreamSeries"
+    post:
+      tags: [xtream]
+      summary: Ações da lista Xtream de séries
+      parameters:
+        - name: xt_recent
+          in: query
+          required: true
+          schema: { type: integer, enum: [1] }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: "#/components/schemas/XtreamAction" }
+      responses:
+        "200":
+          description: Lista salva/removida
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/XtreamSeries" }
+  /1banners-filmes-series.php:
+    get:
+      tags: [banners-tmdb]
+      summary: Busca TMDB, estilo ou banner pronto
+      parameters:
+        - name: query
+          in: query
+          schema: { type: string }
+        - name: type
+          in: query
+          schema: { type: string, enum: [movie, tv] }
+        - name: id
+          in: query
+          schema: { type: integer }
+        - name: action
+          in: query
+          schema: { type: string, enum: [select_style] }
+        - name: model
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 10 }
+        - name: theme
+          in: query
+          schema:
+            type: string
+            enum: [vermelho, azul, verde, roxo, cinza, rosa, dourado, laranja, ciano]
+        - name: cast
+          in: query
+          schema: { type: integer, enum: [1] }
+        - name: mode
+          in: query
+          schema: { type: string, enum: [indicacoes] }
+      responses:
+        "200":
+          description: HTML de busca, estilo ou banner pronto
+          content:
+            text/html: { schema: { type: string } }
+    post:
+      tags: [banners-tmdb]
+      summary: Salva o PNG renderizado do banner
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [action, banner_hash, png_file]
+              properties:
+                action: { type: string, enum: [save_rendered_png] }
+                banner_hash: { type: string }
+                png_file: { type: string, format: binary }
+      responses:
+        "200":
+          description: PNG salvo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  path: { type: string }
+  /1searchvideo.php:
+    get:
+      tags: [videos]
+      summary: Busca ou geração de vídeo por filme/série
+      parameters:
+        - name: query
+          in: query
+          schema: { type: string }
+        - name: type
+          in: query
+          schema: { type: string, enum: [movie, tv] }
+        - name: modelo
+          in: query
+          schema: { type: string, enum: [classico, cinema, netx] }
+        - name: action
+          in: query
+          schema: { type: string, enum: [generate] }
+        - name: id
+          in: query
+          schema: { type: integer }
+        - name: whatsapp
+          in: query
+          schema: { type: string }
+        - name: gp_narrate
+          in: query
+          schema: { type: integer, enum: [1] }
+        - name: gp_voice
+          in: query
+          schema: { type: string, enum: [alex, m3] }
+        - name: gp_trailer_accept
+          in: query
+          schema: { type: string }
+        - name: manual_url
+          in: query
+          schema: { type: string, format: uri }
+      responses:
+        "200":
+          description: URL do MP4, escolha de trailer ou erro
+          content:
+            text/plain: { schema: { type: string } }
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/TrailerChoice"
+                  - $ref: "#/components/schemas/Error"
+  /gp_alex_narracao.php:
+    post:
+      tags: [narracao]
+      summary: Inicia/consulta a narração por IA
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [action, csrf]
+              properties:
+                action: { type: string, enum: [start, retry, status] }
+                csrf: { type: string }
+                ticket: { type: string }
+                voice: { type: string, enum: [alex, m3] }
+                id: { type: string }
+      responses:
+        "200":
+          description: Estado da narração
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Narration" }
+  /gerar_corte_pronto.php:
+    post:
+      tags: [cortes]
+      summary: Gera um corte viral
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [csrf_token, video_id, base_video_file, video_title]
+              properties:
+                csrf_token: { type: string }
+                video_id: { type: string }
+                base_video_file: { type: string }
+                video_title: { type: string }
+                whatsapp: { type: string }
+                frase: { type: string }
+      responses:
+        "200":
+          description: URL do MP4
+          content:
+            text/plain: { schema: { type: string, format: uri } }
+  /salvar_historico.php:
+    post:
+      tags: [cortes]
+      summary: Salva o título no histórico de cortes
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [csrf_token, titulo]
+              properties:
+                csrf_token: { type: string }
+                titulo: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+  /gerar_video_pronto.php:
+    post:
+      tags: [videos]
+      summary: Gera um vídeo de divulgação
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [video_id, video_title, base_video_file]
+              properties:
+                video_id: { type: string }
+                video_title: { type: string }
+                base_video_file: { type: string }
+                whatsapp: { type: string }
+      responses:
+        "200":
+          description: URL do MP4
+          content:
+            text/plain: { schema: { type: string, format: uri } }
+  /logo.php:
+    get:
+      tags: [logo]
+      summary: Página de logo
+      responses:
+        "200":
+          description: HTML
+          content:
+            text/html: { schema: { type: string } }
+    post:
+      tags: [logo]
+      summary: Envia a logo
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [logo_type, image]
+              properties:
+                logo_type: { type: string, enum: [logo_banner_1] }
+                image: { type: string, format: binary }
+                upload: { type: string, description: Nome do botão; obrigatório para o PHP processar }
+      responses:
+        "200":
+          description: Página de logo atualizada
+          content:
+            text/html: { schema: { type: string } }
+  /config_telegram.php:
+    get:
+      tags: [telegram]
+      summary: Página de configuração
+      responses:
+        "200":
+          description: HTML
+          content:
+            text/html: { schema: { type: string } }
+    post:
+      tags: [telegram]
+      summary: Salva o chat_id
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id: { type: string }
+      responses:
+        "200":
+          description: Página com sucesso
+          content:
+            text/html: { schema: { type: string } }
+  /send_telegram.php:
+    get:
+      tags: [telegram]
+      summary: Envia uma imagem para o Telegram
+      parameters:
+        - name: image
+          in: query
+          required: true
+          schema: { type: string }
+        - name: caption
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Página “Sucesso!” (entrega depende do chat_id)
+          content:
+            text/html: { schema: { type: string } }
+  /robo_auto_config.php:
+    get:
+      tags: [robo]
+      summary: Página do robô automático
+      responses:
+        "200":
+          description: HTML
+          content:
+            text/html: { schema: { type: string } }
+    post:
+      tags: [robo]
+      summary: Salva ativo/incluir_whatsapp
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                ativo: { type: string, enum: ["1"] }
+                incluir_whatsapp: { type: string, enum: ["1"] }
+      responses:
+        "200":
+          description: Página atualizada
+          content:
+            text/html: { schema: { type: string } }
+  /log_search.php:
+    post:
+      tags: [util]
+      summary: Registra uma busca de vídeo
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                query: { type: string }
+                type: { type: string, enum: [movie, tv] }
+                whatsapp: { type: string }
+      responses:
+        "200":
+          description: Corpo vazio
+          content:
+            text/html: { schema: { type: string } }
+  /1download_proxy.php:
+    get:
+      tags: [util]
+      summary: Proxy de download do vídeo por filme
+      parameters:
+        - $ref: "#/components/parameters/File"
+      responses:
+        "200":
+          description: Stream do MP4
+          content:
+            video/mp4: { schema: { type: string, format: binary } }
+  /download_proxy.php:
+    get:
+      tags: [util]
+      summary: Proxy de download de cortes/vídeos prontos
+      parameters:
+        - $ref: "#/components/parameters/File"
+      responses:
+        "200":
+          description: Stream do MP4
+          content:
+            video/mp4: { schema: { type: string, format: binary } }
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: PHPSESSID
+  parameters:
+    Action:
+      name: action
+      in: query
+      required: true
+      schema:
+        type: string
+        enum: [feed, logo, thumb, status, create, step, contact]
+    File:
+      name: file
+      in: query
+      required: true
+      schema: { type: string, format: uri }
+  schemas:
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+        message: { type: string }
+        reference: { type: string }
+    FeedItem:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        summary: { type: string }
+        link: { type: string, format: uri }
+        date: { type: string }
+        national: { type: boolean }
+        source: { type: string }
+        topic: { type: string }
+        category: { type: string }
+        group: { type: string }
+    Feed:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/FeedItem" }
+        limit: { type: integer }
+    Article:
+      allOf:
+        - $ref: "#/components/schemas/FeedItem"
+        - type: object
+          properties:
+            state: { type: string, enum: [pending, done, failed] }
+    Job:
+      type: object
+      properties:
+        id: { type: string }
+        created: { type: integer }
+        color: { type: string }
+        whatsapp: { type: string }
+        next: { type: integer }
+        total: { type: integer }
+        articles:
+          type: array
+          items: { $ref: "#/components/schemas/Article" }
+        gallery_url: { type: string }
+        published: { type: integer }
+    CreateBatch:
+      type: object
+      required: [ids, color, csrf]
+      properties:
+        ids:
+          type: array
+          maxItems: 10
+          items: { type: string }
+        color: { type: string }
+        whatsapp: { type: string }
+        csrf: { type: string }
+    StepBatch:
+      type: object
+      required: [job, index, csrf]
+      properties:
+        job: { type: string }
+        index: { type: integer }
+        csrf: { type: string }
+    Contact:
+      type: object
+      required: [remember, csrf]
+      properties:
+        remember: { type: boolean }
+        whatsapp: { type: string }
+        csrf: { type: string }
+    Modelo:
+      type: object
+      properties:
+        id: { type: string }
+        script: { type: string }
+        nome: { type: string }
+        preview: { type: string }
+        categoria: { type: string }
+    TrendingMovie:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        release_date: { type: string }
+        poster_path: { type: string }
+    Trending:
+      type: object
+      properties:
+        movies:
+          type: array
+          items: { $ref: "#/components/schemas/TrendingMovie" }
+        stale: { type: boolean }
+    XtreamMovie:
+      type: object
+      properties:
+        name: { type: string }
+        added: { type: integer }
+        poster: { type: string }
+        year: { type: integer }
+        tmdb_id: { type: integer }
+    XtreamSeriesItem:
+      type: object
+      properties:
+        name: { type: string }
+        added: { type: integer }
+        poster: { type: string }
+        year: { type: integer }
+        tmdb_id: { type: integer }
+    XtreamMovies:
+      type: object
+      properties:
+        saved: { type: boolean }
+        dns: { type: string }
+        user: { type: string }
+        movies:
+          type: array
+          items: { $ref: "#/components/schemas/XtreamMovie" }
+        error: { type: string, nullable: true }
+        diagnostic: { type: object, additionalProperties: true }
+    XtreamSeries:
+      type: object
+      properties:
+        saved: { type: boolean }
+        dns: { type: string }
+        user: { type: string }
+        output: { type: string, enum: [hls, ts] }
+        series:
+          type: array
+          items: { $ref: "#/components/schemas/XtreamSeriesItem" }
+    XtreamAction:
+      type: object
+      required: [csrf, xt_action]
+      properties:
+        csrf: { type: string }
+        xt_action: { type: string, enum: [save, refresh, refresh_auto, delete, resolve] }
+        dns: { type: string }
+        xt_user: { type: string }
+        xt_pass: { type: string, format: password }
+        xt_output: { type: string, enum: [hls, ts] }
+        movie: { type: string }
+        year: { type: string }
+        poster: { type: string }
+    TrailerChoice:
+      type: object
+      properties:
+        action: { type: string, enum: [gp_trailer_choice] }
+        choice_token: { type: string }
+        candidate:
+          type: object
+          properties:
+            video_id: { type: string }
+            title: { type: string }
+            kind: { type: string }
+    Narration:
+      type: object
+      properties:
+        ok: { type: boolean }
+        id: { type: string }
+        status: { type: string, enum: [queued, running, done, error] }
+        message: { type: string }
+        url: { type: string, format: uri }
+        reference: { type: string }
