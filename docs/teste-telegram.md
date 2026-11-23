@@ -75,3 +75,17 @@ Sucesso! A imagem foi enviada para o Telegram com sucesso.
   liberação. Não use imagem invisível/genérica.
 - O teste foi feito em conta própria; a galeria ficou com o conjunto vermelho
   (última cor gerada). Os envios estão no Telegram.
+
+## Atualização: teste de logo ponto
+
+Depois do envio das 6 cores, foi testada uma logo de **um ponto**:
+
+- ponto de **300 px** no canvas 1024×1024: aceito, mas o painel ampliou e ele
+  virou um **círculo branco grande**, cobrindo parte da arte;
+- ponto de **100 px**: o upload foi recusado pelo **limite de 2 trocas de logo
+  por dia**, não pelo conteúdo;
+- o arquivo do ponto pequeno ficou pronto para a próxima janela de troca;
+- a galeria do teste com o ponto grande foi limpa (5 imagens).
+
+A regra de marca continua: um ponto é genérico e não é recomendado para
+produção. O ideal é uma logo visível com o nome da marca.

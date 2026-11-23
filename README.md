@@ -69,6 +69,8 @@ obtido pelo navegador em **22/11/2026**, sem acesso ao código-fonte do servidor
 ## O que não foi executado
 
 - “GERAR TUDO AGORA” do lote (`lote.php`) com vários modelos.
+- Ponto pequeno de logo: preparado, mas o upload foi recusado pelo limite de
+  2 trocas de logo por dia; a logo atual ficou o ponto grande.
 - `save_favs.php` (para não sobrescrever favoritos existentes).
 - `rename_images.php` (renomeia/apaga imagens; destrutivo).
 - Confirmação de entrega do `send_telegram.php` (depende do `chat_id`).

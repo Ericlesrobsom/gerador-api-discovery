@@ -8,7 +8,7 @@
 | Filmes/Séries por lote | até 10 ids |
 | Cortes Virais | 5 por dia (`dailyRemaining = 5`) |
 | Indicações em vídeos | 3 por dia (`limiteMaxInd = 3`) |
-| Logo | 2 trocas por dia (texto da página) |
+| Logo | 2 trocas por dia; a terceira retorna “Você atingiu o limite de 2 trocas de logo por dia.” |
 | Catálogo de modelos | 114 modelos: 92 futebol, 15 basquete, 7 esportes |
 | Xtream | download de ~2,18 MB; timeout de 40 s/90 s no JS |
 | Conexões externas | o painel baixa `player_api.php` do servidor Xtream |
@@ -123,6 +123,19 @@ continua: use uma logo visível da marca, nunca uma imagem invisível/genérica.
   gerar a próxima cor.
 - A galeria ficou com o conjunto vermelho (última cor). Detalhes em
   [`teste-telegram.md`](teste-telegram.md).
+
+## Logo: limite e escala
+
+- O painel limita a **2 trocas de logo por dia**. A terceira tentativa retornou:
+  `Erro! Você atingiu o limite de 2 trocas de logo por dia.`
+- A logo é ampliada na arte. Um ponto de **300 px** em um canvas 1024×1024 foi
+  aceito, mas apareceu como um **círculo branco grande**, cobrindo parte do
+  banner.
+- Um ponto de **100 px** foi preparado, mas o upload foi recusado pelo limite
+  diário (não pelo conteúdo). O arquivo ficou fora do repositório, pronto para
+  a próxima janela de troca.
+- A regra de marca continua: um ponto é genérico; a página avisa que arte
+  universal/genérica pode causar exclusão. O teste não recomenda esse caminho.
 
 ## O que ficou pendente
 
