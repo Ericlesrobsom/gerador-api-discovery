@@ -928,8 +928,9 @@ A página informa **2 trocas por dia** na conta observada.
 > exclusivo com a marca do cliente e que tentativas de tornar o banner
 > universal/genérico resultam em exclusão. Uma logo **100% transparente** foi
 > detectada como “imagem invisível” e a conta foi bloqueada com a mensagem
-> “VIOLAÇÃO DE SEGURANÇA CRÍTICA”. **Não tente** logo invisível, PNG 1×1
-> transparente ou arte genérica.
+> “VIOLAÇÃO DE SEGURANÇA CRÍTICA”. O bloqueio foi revertido no mesmo dia, mas a
+> regra continua: **não tente** logo invisível, PNG 1×1 transparente ou arte
+> genérica.
 
 ---
 

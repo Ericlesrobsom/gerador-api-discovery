@@ -93,6 +93,11 @@ Sessão encerrada. Conexão terminada.
 Não tente contornar. A conta precisa falar com o suporte do painel. Este mapa
 não recomenda nem apoia logo invisível/arte genérica.
 
+**Atualização (2026-11-22):** depois do bloqueio, o painel voltou a abrir o
+dashboard na mesma sessão, após a conta ser liberada. O bloqueio não foi uma
+exclusão imediata; funcionou como trava de segurança reversível. A regra
+continua: use uma logo visível da marca, nunca uma imagem invisível/genérica.
+
 ## WhatsApp: três coisas diferentes
 
 1. **Número na arte/contato do gerador**: as telas de Notícias e Filmes/Séries

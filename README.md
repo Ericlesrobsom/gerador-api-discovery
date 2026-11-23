@@ -10,7 +10,8 @@ obtido pelo navegador em **22/11/2026**, sem acesso ao código-fonte do servidor
 
 > ⚠️ **Regra crítica do painel:** a página de logo proíbe imagens
 > genéricas/invisíveis. Um teste com logo 100% transparente foi detectado como
-> “imagem invisível” e **bloqueou a conta**. Não repita. Veja
+> “imagem invisível” e **bloqueou a conta**. O bloqueio foi revertido no mesmo
+> dia, mas a regra continua: use uma logo visível da marca. Veja
 > [`docs/limites-e-erros.md`](docs/limites-e-erros.md).
 
 ## O que tem aqui
