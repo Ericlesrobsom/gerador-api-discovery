@@ -48,7 +48,7 @@ Resposta observada:
 ```http
 HTTP/1.1 302 Found
 Location: index.php
-Set-Cookie: PHPSESSID=...
+Set-Cookie: PHPSESSID=<cookie>
 ```
 
 Depois do login, `GET /index.php` → `200` com o dashboard.
